@@ -6,8 +6,11 @@ require_once 'autoload.php';
 require_once 'DB.php';
 require_once 'Router.php';
 require_once 'Route.php';
+require_once 'BaseController.php';
 
 foreach (glob("Controllers/*.php") as $filename)
 {
-    require_once $filename;
+    preg_match('/\/(\w+)\.php/', $filename, $matches);
+    $class = 'App\\Controllers\\'.$matches[1];
+    new $class();
 }
