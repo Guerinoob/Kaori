@@ -68,4 +68,4 @@ class Router {
 
 //We instantiate the router and make it global in order to be able to access it anywhere with only one instance
 global $router;
-$router = new Router($_SERVER['REQUEST_URI']);
+$router = new Router(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH));
