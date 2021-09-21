@@ -155,7 +155,23 @@ class Database {
 
         return true;
 
+    }
+    
+    /**
+     * Shortcut for prepare and execute_prepared_query methods
+     *
+     * @see Database::prepare()
+     * @see Database::execute_prepared_query()
+     * 
+     * @param  mixed $query
+     * @param  mixed $args
+     * @return bool|array
+     */
+    public function query($query, $args) {
+        if(!($statement = $this->prepare($query)))
+            return false;
 
+        return $this->execute_prepared_query($args, $statement);
     }
 }
 

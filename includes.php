@@ -3,7 +3,7 @@ require_once 'defines.php';
 
 require_once 'autoload.php';
 
-require_once 'DB.php';
+require_once 'Database.php';
 require_once 'Router.php';
 require_once 'Route.php';
 require_once 'BaseController.php';
