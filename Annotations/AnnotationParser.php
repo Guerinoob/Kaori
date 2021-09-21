@@ -17,7 +17,8 @@ class AnnotationParser {
      * 
      * @see Annotation
      */
-    public static function parse($docComment) {
+    public static function parse($docComment): array
+    {
         $docComment = str_replace('/*', '', $docComment);
         $docComment = str_replace('*/', '', $docComment);
         preg_match_all("/\*(.*)\n/m", $docComment, $lines);

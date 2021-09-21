@@ -3,6 +3,8 @@
  * Route class
  */
 
+namespace App;
+
 /**
  * This class represents one route and binds the route to its callback method
  */
@@ -48,7 +50,8 @@ class Route {
      * @param  string $url The URL to test
      * @return bool Returns true if it matches, false is it doesn't
      */
-    public function match($url) {
+    public function match($url): bool
+    {
         $url = trim($url, '/');
         $path = preg_replace('#:([\w]+)#', '([^/]+)', $this->path);
 
@@ -68,7 +71,8 @@ class Route {
      *
      * @return void
      */
-    public function run() {
+    public function run(): void
+    {
         call_user_func_array($this->callback, $this->params);
     }
 }

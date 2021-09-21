@@ -3,6 +3,8 @@
  * BaseController class
  */
 
+namespace App;
+
 use App\Annotations\AnnotationParser;
 
 /**

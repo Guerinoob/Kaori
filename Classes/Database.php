@@ -74,12 +74,23 @@ class Database {
     }
     
     /**
+     * Returns the ID of the last inserted row
+     *
+     * @return int The ID of the last inserted row
+     */
+    public function getLastInsertId(): int
+    {
+        return mysqli_insert_id($this->mysqli_instance);
+    }
+    
+    /**
      * Performs a select request and returns the fetched result, or false if there was an error
      *
      * @param  string $query The SQL select query
      * @return false|array Returns false if an error occured, else an associative array 
      */
-    public function select($query) {
+    public function select($query)
+    {
         if(!$this->mysqli_instance)
             return false;
 
@@ -100,7 +111,8 @@ class Database {
      * @param  string $query The query to prepare
      * @return false|mysqli_stmt Returns false if an error occured, else the statement object
      */
-    public function prepare($query){
+    public function prepare($query)
+    {
         $prepared_stmt = mysqli_prepare($this->mysqli_instance, $query);
 
         if(!$prepared_stmt) return false;
@@ -115,7 +127,8 @@ class Database {
      * @param  mysqli_stmt $statement The statement object of the prepared query
      * @return bool|array Returns false if an error occured, true if the query was performed without returning a result (UPDATE, INSERT, CREATE TABLE...), or an array of results if it was a SELECT
      */
-    public function execute_prepared_query($args, $statement){
+    public function execute_prepared_query($args, $statement)
+    {
         $types = "";
         $array = array();
 
@@ -167,7 +180,8 @@ class Database {
      * @param  mixed $args
      * @return bool|array
      */
-    public function query($query, $args) {
+    public function query($query, $args)
+    {
         if(!($statement = $this->prepare($query)))
             return false;
 

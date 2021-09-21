@@ -3,6 +3,8 @@
  * Router class
  */
 
+namespace App;
+
 /**
  * This class stores every route and can run the correct one
  */
@@ -40,7 +42,8 @@ class Router {
      * @param  array $methods
      * @return void
      */
-    public function addRoute($path, $callback, $methods) {
+    public function addRoute($path, $callback, $methods): void 
+    {
         foreach($methods as $method) {
             $route = new Route($path, $callback);
             $this->routes[$method][] = $route;
@@ -52,17 +55,20 @@ class Router {
      *
      * @return void
      */
-    public function run() {
+    public function run(): void
+    {
         if(isset($this->routes[$_SERVER['REQUEST_METHOD']]) && is_array($this->routes[$_SERVER['REQUEST_METHOD']]) && count($this->routes[$_SERVER['REQUEST_METHOD']]) > 0) {
             foreach($this->routes[$_SERVER['REQUEST_METHOD']] as $route) {
                 if($route->match($this->url)) {
-                    return $route->run();
+                    $route->run();
+                    break;
                 }
             }
         }
-
-        // TODO : 404 redirection
-        echo 'No route';
+        else {
+            // TODO : 404 redirection
+            echo 'No route';
+        }
     }
 }
 
