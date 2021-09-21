@@ -42,7 +42,7 @@ class Router {
      */
     public function addRoute($path, $callback, $methods) {
         foreach($methods as $method) {
-            $route = new Route(SUBDIR.$path, $callback);
+            $route = new Route($path, $callback);
             $this->routes[$method][] = $route;
         }
     }

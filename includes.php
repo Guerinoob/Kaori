@@ -3,10 +3,10 @@ require_once 'defines.php';
 
 require_once 'autoload.php';
 
-require_once 'Database.php';
-require_once 'Router.php';
-require_once 'Route.php';
-require_once 'BaseController.php';
+foreach (glob(CLASSES_DIR."/*.php") as $filename)
+{
+    require_once $filename;
+}
 
 foreach (glob("Controllers/*.php") as $filename)
 {
