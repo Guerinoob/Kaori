@@ -1,9 +1,20 @@
 <?php
+/**
+ * BaseController class
+ */
 
 use App\Annotations\AnnotationParser;
 
+/**
+ * This class serves as the parent of all controllers classes
+ */
 class BaseController {
-
+    
+    /**
+     * Constructor - Every controller that is instanciated has all its methods annotations parsed in order to add the routes to the global router
+     *
+     * @return void
+     */
     public function __construct() {
         $reflection = new \ReflectionClass(get_called_class());
         global $router;

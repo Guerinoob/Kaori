@@ -1,8 +1,22 @@
 <?php
+/**
+ * AnnotationParser class
+ */
 
 namespace App\Annotations;
 
-class AnnotationParser {
+/**
+ * This class allows the parsing of annotations
+ */
+class AnnotationParser {    
+    /**
+     * Parses a doc comment into one or more annotations (the doc comment is multiline)
+     *
+     * @param  string $docComment The Doc comment
+     * @return array An array of Annotations object (from a child class)
+     * 
+     * @see Annotation
+     */
     public static function parse($docComment) {
         $docComment = str_replace('/*', '', $docComment);
         $docComment = str_replace('*/', '', $docComment);
@@ -16,10 +30,17 @@ class AnnotationParser {
         $annotations = [];
 
         foreach($lines as $line) {
-            preg_match_all("/@(.*)\(/", $line, $array);
+            if(!preg_match_all("/@(.*)\(/", $line, $array))
+                continue;
+
             array_shift($array);
 
             $type = $array[0][0];
+
+            $class = 'App\\Annotations\\'.$type;
+
+            if(!class_exists($class)) 
+                continue;
 
             preg_match_all("/\((.*)\)/", $line, $array);
             array_shift($array);
@@ -41,12 +62,6 @@ class AnnotationParser {
 
 
             $data = json_decode($data, true);
-
-
-            $class = 'App\\Annotations\\'.$type;
-
-            if(!class_exists($class)) 
-                return false;
 
             $annotation = new $class;
 
