@@ -65,22 +65,26 @@
 
         $attributes = array_diff_key($attributes, $exclude);
 
+        $attributes_keys= array_keys($attributes);
+
+        $parameters = array_map(function($key) {
+            return $this->$key;
+        }, $attributes_keys);
+
         if($this->id === null) {
             //It's a new entity, so it will be an INSERT query
             $query = "INSERT INTO ".$this->getClassName()::$table."(";
 
-            $field_names = implode(', ', array_keys($attributes));
+            $field_names = implode(', ', $attributes_keys);
 
             $field_values = implode(', ', array_fill(0, count($attributes), '?'));
-
-            $parameters = array_values($attributes);
 
             $query .= $field_names.") VALUES(".$field_values.")";
 
             if(!$db->query($query, $parameters))
                 return false;
 
-            $this->id = $db->getLastInsertedId();
+            $this->id = $db->getLastInsertId();
             return true;
         }
         else {
@@ -89,7 +93,6 @@
 
             $fields = implode(' = ?, ', array_keys($attributes));
 
-            $parameters = array_values($attributes);
             $parameters[] = $this->id;
 
             $query .= $fields." WHERE id = ?";
@@ -112,6 +115,105 @@
 
         $this->id = null;
         return true;
+    }
+    
+    /**
+     * Returns all the rows from the table in an array of Entity objects (an instance of the current class)
+     *
+     * @return Entity[] Returns an array of Entity objects
+     */
+    public static function getAll(): array
+    {
+        global $db;
+
+        $class_name = get_called_class();
+
+        $results = $db->select("SELECT id FROM ".$class_name::$table);
+        
+        if(!$results)
+            return [];
+
+        return array_map(function($result) use($class_name) {
+            return new $class_name($result['id']);
+        }, $results);
+    }
+    
+    /**
+     * Returns all the rows from the table matching the given parameters, in an array of Entity objects (an instance of the current class)
+     *
+     * @param  array $params An associative array used for the WHERE clause of the query<br>
+     *                       Each entry can be in the format [key => value] with value being any value, null for IS NULL operator or "not null" for IS NOT NULL operator. To make more complex queries, use this format :<br>
+     *                       [key => ['operator' => value, 'equal' => value, 'value' => value]]
+     *                       - Operator corresponds to AND or OR
+     *                       - Equal corresponds to the comparison operator (>, <, >=, <=, =, !=, LIKE...)
+     *                       - Value corresponds to the value tested on the column
+     * 
+     * @return Entity[] Returns an array of Entity objects matching the given parameters
+     */
+    public static function getBy($params = []): array
+    {
+        if(!is_array($params))
+            return [];
+
+        $class_name = get_called_class();
+
+        if(count($params) == 0)
+            return $class_name::getAll();
+
+        global $db;
+        
+        $fields = array_keys($params);
+        $values = array_values($params);
+
+        $index = 0;
+
+        $query_values = [];
+
+        $fields = array_reduce($fields, function($total, $current) use (&$values, &$index, &$query_values) {
+
+            $value = $values[$index];
+            $operator = 'AND';
+
+            if(!is_array($value)) {
+                if($value === null) {
+                    $equal = 'IS NULL';
+                }
+                else if (strtolower($value) == 'not null') {
+                    $equal = 'IS NOT NULL';
+                }
+                else {
+                    $equal = '= ?';
+                    $query_values[] = $value;
+                }
+            }
+            else {
+                if(isset($value['operator']))
+                    $operator = $value['operator'];
+
+                if(isset($value['equal'])) 
+                    $equal = $value['equal'].' ?';
+                else
+                    $equal = '= ?';
+
+                $query_values[] = $value['value'];
+            }
+
+            $index++;
+
+            if(!$total)
+                return $current.' '.$equal;
+
+            return $total.' '.$operator.' '.$current.' '.$equal;
+        }, '');
+
+        $query = "SELECT id FROM ".$class_name::$table." WHERE $fields";
+
+        if(!($results = $db->query($query, $query_values)))
+            return [];
+
+        return array_map(function($result) use($class_name) {
+            return new $class_name($result['id']);
+        }, $results);
     }
     
     /**
@@ -176,12 +278,6 @@
                         if($annotation->get('primary')) {
                             $line .= ' PRIMARY KEY';
                         }
-
-                        /* if($annotation->get('foreign')) {
-                            $class = $annotation->get('foreign');
-                            $table = $class::$table;
-                            $constraints .= 'CONSTRAINT FK_'.$table.'_'.$class_name::$table.'_'.$property->getName().' FOREIGN KEY ('.$property->getName().') REFERENCES '.$table.'(id), ';
-                        } */
 
                         $line .= ', ';
 
