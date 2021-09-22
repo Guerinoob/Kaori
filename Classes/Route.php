@@ -34,8 +34,8 @@ class Route {
     /**
      * Constructor - Setups internal variable
      *
-     * @param  string $path
-     * @param  callable $callback
+     * @param  string $path The path to the route
+     * @param  callable $callback The function that will be executed on that route
      * @return void
      */
     public function __construct($path, $callback)

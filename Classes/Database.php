@@ -176,8 +176,8 @@ class Database {
      * @see Database::prepare()
      * @see Database::execute_prepared_query()
      * 
-     * @param  mixed $query
-     * @param  mixed $args
+     * @param  mixed $query The query to execute
+     * @param  mixed $args The arguments for the query
      * @return bool|array
      */
     public function query($query, $args)

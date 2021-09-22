@@ -37,9 +37,9 @@ class Router {
     /**
      * Adds a route to the site
      *
-     * @param  string $path
-     * @param  callable $callback
-     * @param  array $methods
+     * @param  string $path The path to the route
+     * @param  callable $callback The function that will be executed on that route
+     * @param  array $methods The HTTP methods that will trigger the route
      * @return void
      */
     public function addRoute($path, $callback, $methods): void 
