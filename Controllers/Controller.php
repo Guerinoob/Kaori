@@ -9,6 +9,16 @@ use App\Tools;
 
 class Controller extends BaseController {
 
+    private $test;
+
+    /**
+     * @Route(path="/", methods=["GET", "POST"])
+     */
+    private function er() {
+        $this->assign('nom', 'Kaori');
+        $this->render(TEMPLATES_PATH.'/index.php');
+    }
+
     /**
      * @Route(path="/install", methods=["GET", "POST"])
      */
