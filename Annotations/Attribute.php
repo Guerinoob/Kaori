@@ -76,7 +76,7 @@ class Attribute extends Annotation {
     public function __construct() {
         $this->annotation_type = 'Attribute';
         $this->type = 'varchar';
-        $this->length = 255;
+        $this->length = 0;
         $this->default = NULL;
         $this->primary = false;
         $this->auto_increment = false;
