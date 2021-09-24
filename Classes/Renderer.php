@@ -103,6 +103,17 @@ class Renderer {
     }
     
     /**
+     * Returns the value of the variable stored in the renderer
+     *
+     * @param  string $key The name of the desired variable
+     * @return mixed Returns the value of the variable or null if it doesn't exist
+     */
+    public function getVariable($key): mixed
+    {
+        return $this->data[$key] ?? null;
+    }
+    
+    /**
      * Prints a script tag with the given URL
      *
      * @param  mixed $url The URL of the script file

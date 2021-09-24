@@ -51,7 +51,7 @@ class Router {
     }
     
     /**
-     * Execute route corresponding to the client request
+     * Executes the route corresponding to the client request
      *
      * @return void
      */
