@@ -57,15 +57,19 @@ class Router {
      */
     public function run(): void
     {
+        $found = false;
+
         if(isset($this->routes[$_SERVER['REQUEST_METHOD']]) && is_array($this->routes[$_SERVER['REQUEST_METHOD']]) && count($this->routes[$_SERVER['REQUEST_METHOD']]) > 0) {
             foreach($this->routes[$_SERVER['REQUEST_METHOD']] as $route) {
                 if($route->match($this->url)) {
                     $route->run();
+                    $found = true;
                     break;
                 }
             }
         }
-        else {
+        
+        if(!$found) {
             // TODO : 404 redirection
             echo 'No route';
         }

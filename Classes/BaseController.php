@@ -37,6 +37,8 @@ class BaseController {
                 }
             }
         }
+
+        $this->assign('title', 'Kaori');
     }
     
     /**
