@@ -120,7 +120,7 @@
     /**
      * Returns all the rows from the table in an array of Entity objects (an instance of the current class)
      *
-     * @return self[] Returns an array of Entity objects
+     * @return array Returns an array of Entity objects
      */
     public static function getAll(): array
     {
@@ -148,7 +148,7 @@
      *                       - Equal corresponds to the comparison operator (>, <, >=, <=, =, !=, LIKE...)
      *                       - Value corresponds to the value tested on the column
      * 
-     * @return self[] Returns an array of Entity objects matching the given parameters
+     * @return array Returns an array of Entity objects matching the given parameters
      */
     public static function getBy($params = []): array
     {
