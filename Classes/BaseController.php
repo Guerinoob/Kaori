@@ -39,6 +39,7 @@ class BaseController {
         }
 
         $this->assign('title', 'Kaori');
+        $this->assign('Session', Session::class);
 
         if(isset($_SESSION['data']) && is_array($_SESSION['data'])) {
             $data = $_SESSION['data'];
