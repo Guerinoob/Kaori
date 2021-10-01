@@ -123,7 +123,7 @@ class FormBuilder {
     }
     
     /**
-     * addField
+     * Adds a field to the form's fields
      *
      * @param  mixed $params An array describing the field to add<br>
      *               The array can contain these values :
@@ -324,7 +324,12 @@ class FormBuilder {
 
         return $form;
     }
-
+    
+    /**
+     * Generates a token which is then stored in the session, used to prevent CSRF attacks
+     *
+     * @return void
+     */
     private function generateCsrfToken(): void
     {
         $_SESSION['csrf'] = bin2hex(\random_bytes(32));
