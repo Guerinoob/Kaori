@@ -4,3 +4,5 @@
 /Theme/templates/**
 /Controllers/**
 /Entity/**
+/Classes/WebSocket/SocketHandler.php
+server.php
