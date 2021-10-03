@@ -15,14 +15,19 @@ class BaseController {
     private $renderer;
     
     /**
-     * Constructor - Every controller that is instanciated has all its methods annotations parsed in order to add the routes to the global router
+     * Constructor - Instantiates the renderer
      *
      * @return void
      */
     public function __construct() {
         $this->renderer = new Renderer();
     }
-
+    
+    /**
+     * Parses the controller annotations in order to add the routes to the global router
+     *
+     * @return void
+     */
     public static function initRoutes(): void
     {
         $reflection = new \ReflectionClass(get_called_class());
@@ -120,7 +125,14 @@ class BaseController {
     {
         return $this->renderer->getVariable($key);
     }
-
+    
+    /**
+     * Executes the callback function after initializing some data
+     *
+     * @param  callback $callback The callback function to execute
+     * @param  mixed $arguments Array of arguments for the callback function
+     * @return void
+     */
     public function call($callback, $arguments)
     {
         $this->assign('title', SITENAME);
