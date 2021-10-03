@@ -21,7 +21,10 @@ class BaseController {
      */
     public function __construct() {
         $this->renderer = new Renderer();
+    }
 
+    public static function initRoutes(): void
+    {
         $reflection = new \ReflectionClass(get_called_class());
         global $router;
 
@@ -32,22 +35,10 @@ class BaseController {
 
             foreach($annotations as $annotation) {
                 if($annotation->getAnnotationType() == 'Route') {
-                    $router->addRoute($annotation->get('path'), $method->getClosure($this), $annotation->get('methods'));
+                    $router->addRoute($annotation->get('path'), $method->getClosure($reflection->newInstance()), $annotation->get('methods'));
 
                 }
             }
-        }
-
-        $this->assign('title', SITENAME);
-        $this->assign('Session', Session::class);
-
-        if(isset($_SESSION['data']) && is_array($_SESSION['data'])) {
-            $data = $_SESSION['data'];
-
-            foreach($data as $key => $value)
-                $this->assign($key, $value);
-
-            unset($_SESSION['data']);
         }
     }
     
@@ -125,10 +116,25 @@ class BaseController {
      * @param  string $key The name of the desired variable
      * @return mixed Returns the value of the variable or null if it doesn't exist
      */
-    protected function getVariable($key): mixed
+    protected function getVariable($key)
     {
         return $this->renderer->getVariable($key);
     }
 
+    public function call($callback, $arguments)
+    {
+        $this->assign('title', SITENAME);
+        $this->assign('Session', Session::class);
 
+        if(isset($_SESSION['data']) && is_array($_SESSION['data'])) {
+            $data = $_SESSION['data'];
+
+            foreach($data as $key => $value)
+                $this->assign($key, $value);
+
+            unset($_SESSION['data']);
+        }
+
+        $callback->call($this, $arguments);
+    }
 }

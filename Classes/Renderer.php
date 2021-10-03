@@ -108,7 +108,7 @@ class Renderer {
      * @param  string $key The name of the desired variable
      * @return mixed Returns the value of the variable or null if it doesn't exist
      */
-    public function getVariable($key): mixed
+    public function getVariable($key)
     {
         return $this->data[$key] ?? null;
     }

@@ -73,6 +73,9 @@ class Route {
      */
     public function run(): void
     {
-        call_user_func_array($this->callback, $this->params);
+        $fn = new \ReflectionFunction($this->callback);
+        $controller = get_class($fn->getClosureThis());
+        $controller = new $controller;
+        $controller->call($this->callback, $this->params);
     }
 }

@@ -12,5 +12,5 @@ foreach (glob("Controllers/*.php") as $filename)
 {
     preg_match('/\/(\w+)\.php/', $filename, $matches);
     $class = 'App\\Controllers\\'.$matches[1];
-    new $class();
+    $class::initRoutes();
 }
