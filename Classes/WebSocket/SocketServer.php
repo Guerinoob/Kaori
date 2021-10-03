@@ -71,7 +71,7 @@ class SocketServer {
      * @param  int $bufferSize The maximum number of bytes that can be read for a message
      * @return void
      */
-    public function __construct($url = '0.0.0.0', $port = SOCKET_PORT, $bufferSize = 2048)
+    public function __construct($url = '0.0.0.0', $port = SOCKET_PORT, $bufferSize = -1)
     {
         $this->clients = [];
         $this->sockets = [];
@@ -200,7 +200,7 @@ class SocketServer {
 
         $s = $this->clients[$id]['socket'];
 
-        $message = fread($s, $this->maxBufferSize);
+        $message = stream_get_contents($s, $this->maxBufferSize);
 
         if($message && $this->clients[$id]['handshake'])
             $message = $this->unseal($message);
