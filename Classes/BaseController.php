@@ -137,6 +137,7 @@ class BaseController {
     {
         $this->assign('title', SITENAME);
         $this->assign('Session', Session::class);
+        $this->assign('Tools', Tools::class);
 
         if(isset($_SESSION['data']) && is_array($_SESSION['data'])) {
             $data = $_SESSION['data'];
