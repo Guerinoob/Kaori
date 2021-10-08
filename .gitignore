@@ -6,3 +6,4 @@
 /Entity/**
 /Classes/WebSocket/SocketHandler.php
 server.php
+robots.txt

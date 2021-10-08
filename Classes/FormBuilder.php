@@ -120,6 +120,8 @@ class FormBuilder {
             return null;
 
         $this->field_container = $html;
+
+        return $this;
     }
     
     /**
@@ -127,13 +129,14 @@ class FormBuilder {
      *
      * @param  mixed $params An array describing the field to add<br>
      *               The array can contain these values :
-     *               - type => string -> input, password, date, select, radio, checkbox, fieldset, fieldset_close, html, button, submit button
+     *               - type => string -> text, password, date, select, radio, checkbox, fieldset, fieldset_close, html, button, submit button
      *               - label => string -> the label of the field / the field group
      *               - value => string|array -> a string for a simple field, or an associative array for more complex ones like selects, radios or checkboxes. The key is the value and the value is an array with the keys label and selected
      *               - id => string
      *               - name => string
      *               - extra => array -> an associative array where the key is the attribute name and the value the attribute value
      *               - class => string
+     *               - container => string -> The wrapper for the field. Must contain a {{field}} string where the field will be rendered
      * @return FormBuilder|null Returns the current instance if the field was added, null otherwise
      */
     public function addField($params): ?FormBuilder
@@ -150,9 +153,13 @@ class FormBuilder {
             'extra' => [],
             'class' => '',
             'selected' => false,
+            'container' => null
         ];
 
         $params = array_merge($default_params, $params);
+
+        if($params['container'] !== null && !preg_match('/{{field}}/', $params['container']))
+            $params['container'] = null;
 
         switch($params['type']) {
             case 'select':
@@ -300,14 +307,23 @@ class FormBuilder {
                     $fieldset_open = false;
                     break;
 
+                case 'textarea':
+                    $html .= '<label for="'.$field['id'].'">'.$field['label'].'</label>';
+                    $html .= '<textarea '.$class.' '.$id.' name="'.$field['name'].'" '.$extra.'>'.$field['value'].'</textarea>';
+                    break;
+
                 default:
                     $html .= '<label for="'.$field['id'].'">'.$field['label'].'</label>';
                     $html .= '<input type="'.$field['type'].'" '.$class.' '.$id.' name="'.$field['name'].'" value="'.$field['value'].'" '.$extra.'>';
                     break;
             }
 
-            if(!in_array($field['type'], ['fieldset', 'fieldset_close', 'html']))
-                $html = str_replace('{{field}}', $html, $this->field_container);
+            if(!in_array($field['type'], ['fieldset', 'fieldset_close', 'html'])) {
+                if($field['container'] !== null)
+                    $html = str_replace('{{field}}', $html, $field['container']);
+                else
+                    $html = str_replace('{{field}}', $html, $this->field_container);
+            }
             
             $form .= $html;
         }
