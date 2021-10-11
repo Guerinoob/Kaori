@@ -148,6 +148,6 @@ class BaseController {
             unset($_SESSION['data']);
         }
 
-        $callback->call($this, $arguments);
+        $callback->call($this, ...$arguments);
     }
 }
