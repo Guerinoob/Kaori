@@ -38,6 +38,13 @@ class FormBuilder {
      * @var string
      */
     protected $field_container;
+
+    /**
+     * The enctype attribute of the form element. Default is "application/x-www-form-urlencoded"
+     * 
+     * @var string
+     */
+    protected $enctype;
     
     /**
      * Constructor - Does nothing special
@@ -50,6 +57,7 @@ class FormBuilder {
         $this->action = '';
         $this->method = '';
         $this->field_container = '<div class="form-group">{{field}}</div>';
+        $this->enctype = 'application/x-www-form-urlencoded';
     }
 
     /**
@@ -120,6 +128,29 @@ class FormBuilder {
             return null;
 
         $this->field_container = $html;
+
+        return $this;
+    }
+
+    /**
+     * Returns the enctype attribute of the form element
+     * 
+     * @return string The enctype attribute of the form element
+     */  
+    public function getEnctype(): string
+    {
+        return $this->enctype;
+    }
+
+    /**
+     * Sets the enctype attribute of the form element.
+     * 
+     * @param string The enctype attribute of the form element
+     * @return FormBuilder The instance of the FormBuilder
+     */  
+    public function setEnctype($enctype): FormBuilder
+    {
+        $this->enctype = $enctype;
 
         return $this;
     }
@@ -211,7 +242,7 @@ class FormBuilder {
 
         $this->generateCsrfToken();
 
-        $form = '<form method="'.$this->method.'" action="'.$this->action.'">';
+        $form = '<form method="'.$this->method.'" action="'.$this->action.'" enctype="'.$this->enctype.'">';
         $form .= '<input type="hidden" name="csrf" value="'.$_SESSION['csrf'].'">';
 
         $fieldset_open = false;
@@ -242,7 +273,7 @@ class FormBuilder {
                     $html .= '<select '.$class.' '.$id.' name="'.$field['name'].'" '.$extra.'>';
 
                     $options = array_reduce(array_keys($field['value']), function($total, $current) use($field) {
-                        $selected = $field['value'][$current]['selected'] ? 'selected' : '';
+                        $selected = isset($field['value'][$current]['selected']) && $field['value'][$current]['selected'] ? 'selected' : '';
                         return $total.'<option value="'.$current.'" '.$selected.'>'.$field['value'][$current]['label'].'</option>';
                     }, '');
 
@@ -256,7 +287,7 @@ class FormBuilder {
 
                     $inputs = array_reduce(array_keys($field['value']), function($total, $current) use($field, $extra, $class) {
                         $id = 'id="'.$field['id'].'_'.$current.'"';
-                        $selected = $field['value'][$current]['selected'] ? 'checked' : '';
+                        $selected = isset($field['value'][$current]['selected']) && $field['value'][$current]['selected'] ? 'checked' : '';
 
                         return $total.'<label for="'.$field['name'].'_'.$current.'">'.$field['value'][$current]['label'].'</label><input type="radio" '.$class.' name="'.$field['name'].'" '.$id.' value="'.$current.'" '.$extra.' '.$selected.'>';
                     }, '');
@@ -270,7 +301,7 @@ class FormBuilder {
 
                     $inputs = array_reduce(array_keys($field['value']), function($total, $current) use($field, $extra, $class) {
                         $id = 'id="'.$field['id'].'_'.$current.'"';
-                        $selected = $field['value'][$current]['selected'] ? 'checked' : '';
+                        $selected = isset($field['value'][$current]['selected']) && $field['value'][$current]['selected'] ? 'checked' : '';
 
                         return $total.'<label for="'.$field['name'].'_'.$current.'">'.$field['value'][$current]['label'].'</label><input type="checkbox" '.$class.' name="'.$field['name'].'[]" '.$id.' value="'.$current.'" '.$extra.' '.$selected.'>';
                     }, '');
