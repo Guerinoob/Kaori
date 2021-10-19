@@ -46,7 +46,7 @@
      *
      * @return int The ID of the entity
      */
-    public function getId(): int
+    public function getId(): ?int
     {
         return $this->id;
     }
@@ -128,7 +128,7 @@
 
         $class_name = get_called_class();
 
-        $results = $db->select("SELECT id FROM ".$class_name::$table);
+        $results = $db->select("SELECT id FROM ".$class_name::$table." ORDER BY id DESC");
         
         if(!$results)
             return [];
@@ -206,7 +206,8 @@
             return $total.' '.$operator.' '.$current.' '.$equal;
         }, '');
 
-        $query = "SELECT id FROM ".$class_name::$table." WHERE $fields";
+        //TODO : Order by
+        $query = "SELECT id FROM ".$class_name::$table." WHERE $fields ORDER BY id DESC";
 
         if(!($results = $db->query($query, $query_values)))
             return [];
