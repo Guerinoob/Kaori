@@ -34,3 +34,14 @@ define ('DOCUMENT_ROOT_API', DOCUMENT_ROOT.API_PATH);
 define ('DOCUMENT_ROOT_THEME', DOCUMENT_ROOT.THEME_PATH);
 
 define('SOCKET_PORT', 9010);
+
+define('EMAIL', 'huetjeremy@outlook.com');
+define('SMTP_HOST', 'smtp.orange.fr');
+define('SMTP_PORT', 25);
+define('SMTP_USERNAME', '');
+define('SMTP_PASSWORD', '');
+
+ini_set('SMTP', SMTP_HOST);
+ini_set('smtp_port', SMTP_PORT);
+ini_set('username', SMTP_USERNAME);
+ini_set('password', SMTP_PASSWORD);
