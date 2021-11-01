@@ -360,7 +360,7 @@
     public function toStdObject() {
         $obj = new \stdClass();
 
-        $attributes = get_class_vars($this->class_name);
+        $attributes = get_class_vars($this->getClassName());
         $exclude = ['table', 'class_name'];
 
         foreach($attributes as $key => $default_value) {
