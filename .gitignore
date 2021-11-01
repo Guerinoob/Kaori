@@ -7,3 +7,4 @@
 /Classes/WebSocket/SocketHandler.php
 server.php
 robots.txt
+/backup/**
