@@ -40,11 +40,11 @@ class Tools {
 
     public static function jsonSuccess($data): string
     {
-        return json_encode(['success' => true, 'data' => json_encode($data)]);
+        return json_encode(['success' => true, 'data' => $data]);
     }
 
     public static function jsonError($data)
     {
-        return json_encode(['success' => false, 'data' => json_encode($data)]);
+        return json_encode(['success' => false, 'data' => $data]);
     }
 }
