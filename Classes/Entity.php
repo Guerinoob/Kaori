@@ -93,6 +93,9 @@
 
             $fields = implode(' = ?, ', array_keys($attributes));
 
+            if(count($attributes) > 0)
+                $fields .= ' = ? ';
+
             $parameters[] = $this->id;
 
             $query .= $fields." WHERE id = ?";
