@@ -37,4 +37,14 @@ class Tools {
 
         return $result;
     }
+
+    public static function jsonSuccess($data): string
+    {
+        return json_encode(['success' => true, 'data' => json_encode($data)]);
+    }
+
+    public static function jsonError($data)
+    {
+        return json_encode(['success' => false, 'data' => json_encode($data)]);
+    }
 }
