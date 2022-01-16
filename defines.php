@@ -10,6 +10,7 @@ define('ROOT_URL', 'http://localhost');
 define ('DOCUMENT_ROOT', $_SERVER['DOCUMENT_ROOT'].'');
 
 define('CLASSES_DIR', DOCUMENT_ROOT.'/Classes');
+define('OVERRIDE_DIR', DOCUMENT_ROOT.'/Override');
 define('THEME_PATH', DOCUMENT_ROOT.'/Theme');
 define('THEME_URL', ROOT_URL.'/Theme');
 

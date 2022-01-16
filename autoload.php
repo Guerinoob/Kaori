@@ -13,7 +13,12 @@ spl_autoload_register(function ($class_name) {
 
         $path .= '.php';
 
-        require_once $path;
+        if(file_exists($path)) {
+            require_once $path;
+        }
+        else {
+            require_once DOCUMENT_ROOT.'/Classes/'.implode('/', $array).'.php';
+        }
     }
     else {
         require_once $class_name . '.php';
