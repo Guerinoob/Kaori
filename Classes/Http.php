@@ -14,7 +14,7 @@ class Http {
      *               - headers 
      *               - body
      *               - ssl
-     * @return void
+     * @return Response The request's response
      */
     public function request($url, $params = []): ?Response
     {

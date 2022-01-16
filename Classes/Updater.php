@@ -14,7 +14,7 @@ class Updater {
     {
         $http = new Http();
 
-        $credentials = base64_encode('Guerinoob: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');
+        $credentials = base64_encode('Guerinoob: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');
 
         $response = $http->request($url, [
             'method' => 'GET',
