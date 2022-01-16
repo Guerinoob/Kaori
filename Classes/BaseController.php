@@ -31,7 +31,7 @@ class BaseController {
     public static function initRoutes(): void
     {
         $reflection = new \ReflectionClass(get_called_class());
-        global $router;
+        $router = Router::getInstance();
 
         foreach($reflection->getMethods() as $method) {
             $docComment = $method->getDocComment();

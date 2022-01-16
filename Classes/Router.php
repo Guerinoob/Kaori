@@ -22,6 +22,11 @@ class Router {
      * @var array
      */
     private $routes = [];
+
+    /**
+     * The Router instance
+     */
+    private static $router;
     
     /**
      * Constructor - Setups internal variable
@@ -32,6 +37,20 @@ class Router {
     public function __construct($url)
     {
         $this->url = $url;
+    }
+
+    /**
+     * Creates an instance of the router it it has not been created yet, then returns the instance
+     * 
+     * @return Router The router instance
+     */
+    public static function getInstance(): Router
+    {
+        if(static::$router)
+            return static::$router;
+
+        static::$router = new Router(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH));
+        return static::$router;
     }
     
     /**
@@ -75,7 +94,3 @@ class Router {
         }
     }
 }
-
-//We instantiate the router and make it global in order to be able to access it anywhere with only one instance
-global $router;
-$router = new Router(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH));

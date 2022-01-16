@@ -3,11 +3,12 @@
  * Entity class
  */
 
- namespace App;
+namespace App;
 
- use App\Annotations\AnnotationParser;
- 
- /**
+use App\Annotations\AnnotationParser;
+use App\Database;
+
+/**
   * This class represents an Entity stored in the database. Each column is declared with a @Attribute Annotation.
   * This class implements the basic methods of an entity (load, save, delete...). It can not be instantiated
   *
@@ -58,7 +59,7 @@
      */
     public function save(): bool
     {
-        global $db;
+        $db = Database::getInstance();
 
         $attributes = get_class_vars($this->getClassName());
         $exclude = array_fill_keys(['table', 'id'], ''); //Properties that are not in the database
@@ -111,7 +112,7 @@
      */
     public function delete(): bool
     {
-        global $db;
+        $db = Database::getInstance();
 
         if(!$db->query("DELETE FROM ".$this->getClassName()::$table." WHERE id = ?", [$this->id]))
             return false;
@@ -127,7 +128,7 @@
      */
     public static function getAll(): array
     {
-        global $db;
+        $db = Database::getInstance();
 
         $class_name = get_called_class();
 
@@ -163,7 +164,7 @@
         if(count($params) == 0)
             return $class_name::getAll();
 
-        global $db;
+        $db = Database::getInstance();
         
         $fields = array_keys($params);
         $values = array_values($params);
@@ -230,7 +231,7 @@
      */
     public static function createTable(): bool
     {
-        global $db;
+        $db = Database::getInstance();
 
         $class_name = get_called_class();
 
@@ -306,7 +307,7 @@
      */
     public static function addConstraints(): bool
     {
-        global $db;
+        $db = Database::getInstance();
 
         $class_name = get_called_class();
 
@@ -404,7 +405,7 @@
      */
     private function loadById($id): void 
     {
-        global $db;
+        $db = Database::getInstance();
         
         $result = $db->query("SELECT * FROM ".$this->getClassName()::$table." WHERE id = ?", [$id]);
 
@@ -424,10 +425,10 @@
 
         foreach($attributes as $key => $default_value) {
             if(is_array($data) && isset($data[$key])) {
-                $this->$key = htmlentities(html_entity_decode($data[$key]), ENT_NOQUOTES);
+                $this->$key = $data[$key];
             }
             else if(is_object($data) && isset($data->$key)) {
-                $this->$key = htmlentities(html_entity_decode($data->$key), ENT_NOQUOTES);
+                $this->$key = $data->$key;
             }
 
         }

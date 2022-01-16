@@ -3,14 +3,23 @@
  * Database class
  */
 
+namespace App;
+
 /**
  * This class handles the database connection and can be used to perform queries
  */
 class Database {    
     /**
+     * The database instance
+     * 
+     * @var Database
+     */
+    private static $database;
+
+    /**
      * The mysqli instance
      *
-     * @var mysqli
+     * @var \mysqli
      */
     public $mysqli_instance;
     
@@ -62,13 +71,27 @@ class Database {
         $this->mysqli_instance = mysqli_connect($db_host, $db_user, $db_password, $db_name);
         mysqli_query($this->mysqli_instance, "SET NAMES utf8");
     }
+
+    /**
+     * Returns the mysqli instance
+     *
+     * @return Database The database instance
+     */
+    public static function getInstance(): Database
+    {
+        if(static::$database)
+            return static::$database;
+
+        static::$database = new Database(DB_USER, DB_PASSWORD, DB_HOST, DB_NAME);
+        return static::$database;
+    }
     
     /**
      * Returns the mysqli instance
      *
-     * @return mysqli The database instance
+     * @return mysqli The mysqli instance
      */
-    public function getInstance(): mysqli
+    public function getMysqliInstance(): \mysqli
     {
         return $this->mysqli_instance;
     }
@@ -188,7 +211,3 @@ class Database {
         return $this->execute_prepared_query($args, $statement);
     }
 }
-
-//We instantiate the database and make it global in order to be able to access it anywhere with only one instance
-global $db;
-$db = new Database(DB_USER, DB_PASSWORD, DB_HOST, DB_NAME);
