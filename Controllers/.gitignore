@@ -1,2 +1,3 @@
 *
 !.gitignore
+!InstallerController.php

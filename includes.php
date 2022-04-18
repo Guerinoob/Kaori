@@ -1,4 +1,6 @@
 <?php
+@include_once 'custom_defines.php';
+
 require_once 'defines.php';
 
 require_once 'autoload.php';
