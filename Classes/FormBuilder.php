@@ -267,86 +267,83 @@ class FormBuilder {
             if(!empty($field['id']))
                 $id = 'id="'.$field['id'].'"';
 
-            switch($field['type']) {
-                case 'select':
-                    $html .= '<label for="'.$field['id'].'">'.$field['label'].'</label>';
-                    $html .= '<select '.$class.' '.$id.' name="'.$field['name'].'" '.$extra.'>';
+            //Field types
+            if($field['type'] == 'select') {
+                $html .= '<label for="'.$field['id'].'">'.$field['label'].'</label>';
+                $html .= '<select '.$class.' '.$id.' name="'.$field['name'].'" '.$extra.'>';
 
-                    $options = array_reduce(array_keys($field['value']), function($total, $current) use($field) {
-                        $selected = isset($field['value'][$current]['selected']) && $field['value'][$current]['selected'] ? 'selected' : '';
-                        return $total.'<option value="'.$current.'" '.$selected.'>'.$field['value'][$current]['label'].'</option>';
-                    }, '');
+                $options = array_reduce(array_keys($field['value']), function($total, $current) use($field) {
+                    $selected = isset($field['value'][$current]['selected']) && $field['value'][$current]['selected'] ? 'selected' : '';
+                    return $total.'<option value="'.$current.'" '.$selected.'>'.$field['value'][$current]['label'].'</option>';
+                }, '');
 
-                    $html .= $options;
+                $html .= $options;
 
-                    $html .= '</select>';
-                    break;
-    
-                case 'radio':
-                    $html .= '<p>'.$field['label'].'</p>';
+                $html .= '</select>';
+            }
+            if($field['type'] == 'radio') {
+                $html .= '<p>'.$field['label'].'</p>';
 
-                    $inputs = array_reduce(array_keys($field['value']), function($total, $current) use($field, $extra, $class) {
-                        $id = 'id="'.$field['id'].'_'.$current.'"';
-                        $selected = isset($field['value'][$current]['selected']) && $field['value'][$current]['selected'] ? 'checked' : '';
+                $inputs = array_reduce(array_keys($field['value']), function($total, $current) use($field, $extra, $class) {
+                    $id = 'id="'.$field['id'].'_'.$current.'"';
+                    $selected = isset($field['value'][$current]['selected']) && $field['value'][$current]['selected'] ? 'checked' : '';
 
-                        return $total.'<label for="'.$field['name'].'_'.$current.'">'.$field['value'][$current]['label'].'</label><input type="radio" '.$class.' name="'.$field['name'].'" '.$id.' value="'.$current.'" '.$extra.' '.$selected.'>';
-                    }, '');
+                    return $total.'<label for="'.$field['name'].'_'.$current.'">'.$field['value'][$current]['label'].'</label><input type="radio" '.$class.' name="'.$field['name'].'" '.$id.' value="'.$current.'" '.$extra.' '.$selected.'>';
+                }, '');
 
-                    $html .= $inputs;
-                    
-                    break;
-    
-                case 'checkbox':
-                    $html .= '<p>'.$field['label'].'</p>';
+                $html .= $inputs;     
+            }
+            if($field['type'] == 'checkbox') {
+                $html .= '<p>'.$field['label'].'</p>';
 
-                    $inputs = array_reduce(array_keys($field['value']), function($total, $current) use($field, $extra, $class) {
-                        $id = 'id="'.$field['id'].'_'.$current.'"';
-                        $selected = isset($field['value'][$current]['selected']) && $field['value'][$current]['selected'] ? 'checked' : '';
+                $inputs = array_reduce(array_keys($field['value']), function($total, $current) use($field, $extra, $class) {
+                    $id = 'id="'.$field['id'].'_'.$current.'"';
+                    $selected = isset($field['value'][$current]['selected']) && $field['value'][$current]['selected'] ? 'checked' : '';
 
-                        return $total.'<label for="'.$field['name'].'_'.$current.'">'.$field['value'][$current]['label'].'</label><input type="checkbox" '.$class.' name="'.$field['name'].'[]" '.$id.' value="'.$current.'" '.$extra.' '.$selected.'>';
-                    }, '');
+                    return $total.'<label for="'.$field['name'].'_'.$current.'">'.$field['value'][$current]['label'].'</label><input type="checkbox" '.$class.' name="'.$field['name'].'[]" '.$id.' value="'.$current.'" '.$extra.' '.$selected.'>';
+                }, '');
 
-                    $html .= $inputs;
-                    break;
-    
-                case 'fieldset':
-                    if($fieldset_open)
-                        $html .= '</fieldset>';
+                $html .= $inputs;
+            }
+            if($field['type'] == 'fieldset') {
+                if($fieldset_open)
+                    $html .= '</fieldset>';
 
-                    $html .= '<fieldset '.$class.' '.$id.' '.$extra.'>';
-                    $html .= '<legend>'.$field['value'].'</legend>';
+                $html .= '<fieldset '.$class.' '.$id.' '.$extra.'>';
+                $html .= '<legend>'.$field['value'].'</legend>';
 
-                    $fieldset_open = true;
-                    break;
-    
-                case 'html':
-                    $html .= $field['value'];                    
-                    break;
-    
-                case 'button':
-                    $html .= '<button type="button" '.$class.' '.$id.' name="'.$field['name'].'" value="'.$field['value'].'" '.$extra.'>'.$field['label'].'</button>';
-                    break;
+                $fieldset_open = true;
+            }
+            if($field['type'] == 'html') {
+                $html .= $field['value'];                    
+            }
+            if($field['type'] == 'button') {
+                $html .= '<button type="button" '.$class.' '.$id.' name="'.$field['name'].'" value="'.$field['value'].'" '.$extra.'>'.$field['label'].'</button>';
+            }
+            if($field['type'] == 'submit') {
+                $html .= '<button type="submit" '.$class.' '.$id.' name="'.$field['name'].'" value="'.$field['value'].'" '.$extra.'>'.$field['label'].'</button>';
+            }
+            if($field['type'] == 'fieldset_close') {
+                if($fieldset_open)
+                    $html .= '</fieldset>';
 
-                case 'submit':
-                    $html .= '<button type="submit" '.$class.' '.$id.' name="'.$field['name'].'" value="'.$field['value'].'" '.$extra.'>'.$field['label'].'</button>';
-                    break;
+                $fieldset_open = false;
+            }
+            if($field['type'] == 'textarea') {
+                $html .= '<label for="'.$field['id'].'">'.$field['label'].'</label>';
+                $html .= '<textarea '.$class.' '.$id.' name="'.$field['name'].'" '.$extra.'>'.$field['value'].'</textarea>';
+            }
 
-                case 'fieldset_close':
-                    if($fieldset_open)
-                        $html .= '</fieldset>';
+            $custom = $this->customFields($field, $id, $class, $extra);
 
-                    $fieldset_open = false;
-                    break;
-
-                case 'textarea':
-                    $html .= '<label for="'.$field['id'].'">'.$field['label'].'</label>';
-                    $html .= '<textarea '.$class.' '.$id.' name="'.$field['name'].'" '.$extra.'>'.$field['value'].'</textarea>';
-                    break;
-
-                default:
+            if(!$custom) {
+                if($html == '') {
                     $html .= '<label for="'.$field['id'].'">'.$field['label'].'</label>';
                     $html .= '<input type="'.$field['type'].'" '.$class.' '.$id.' name="'.$field['name'].'" value="'.$field['value'].'" '.$extra.'>';
-                    break;
+                }
+            }
+            else {
+                $html = $custom;
             }
 
             if(!in_array($field['type'], ['fieldset', 'fieldset_close', 'html'])) {
@@ -370,6 +367,18 @@ class FormBuilder {
         }
 
         return $form;
+    }
+
+    /**
+     * Allows to override field types or render custom ones. Returns the field rendered in HTML
+     * 
+     * @param array $field Array containing the field informations (see AddField)
+     * @param string $id The ID of the field in HTML if there is one (id="field_id")
+     * @param string $class The classes of the field in HTML if there is one (class="field_class")
+     * @param string $extra The extra string of the field in HTML, containing custom attributes (attribute="value" attribute2="value2" etc)
+     */
+    protected function customFields($field, $id, $class, $extra) {
+        return false;
     }
     
     /**

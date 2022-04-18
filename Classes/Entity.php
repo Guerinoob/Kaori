@@ -330,7 +330,7 @@ use App\Database;
                             $alter = true;
                             $class = $annotation->get('foreign');
                             $table = $class::$table;
-                            $query .= 'ADD CONSTRAINT FK_'.$table.'_'.$class_name::$table.'_'.$property->getName().' FOREIGN KEY ('.$property->getName().') REFERENCES '.$table.'(id), ';
+                            $query .= 'ADD CONSTRAINT FK_'.$class_name::$table.'_'.rand(0, 10000000).' FOREIGN KEY ('.$property->getName().') REFERENCES '.$table.'(id), ';
                         }
 
                     }

@@ -8,13 +8,13 @@ class Updater {
 
     public const UPDATE_FOLDER = DOCUMENT_ROOT.'/update';
 
-    public const UPDATE_ZIP = self::UPDATE_FOLDER.'/master.zip';
+    public const UPDATE_ZIP = '/master.zip';
 
-    public static function download($url)
+    public static function download($url, $destination)
     {
         $http = new Http();
 
-        $credentials = base64_encode('Guerinoob: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');
+        $credentials = base64_encode('Guerinoob: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');
 
         $response = $http->request($url, [
             'method' => 'GET',
@@ -23,7 +23,7 @@ class Updater {
 
         if($response->getStatusCode() == 200 || $response->getStatusCode() == 302) {
             if(file_exists(self::UPDATE_FOLDER) || mkdir(self::UPDATE_FOLDER)) {
-                return file_put_contents(self::UPDATE_ZIP, $response->getContent()) !== false;
+                return file_put_contents(self::UPDATE_FOLDER.self::UPDATE_ZIP, $response->getContent()) !== false;
             }
         }
 
@@ -32,7 +32,7 @@ class Updater {
 
     public static function update($backup = false)
     {
-        if(!self::download('https://github.com/Guerinoob/Kaori/archive/refs/heads/master.zip'))
+        if(!self::download('https://github.com/Guerinoob/Kaori/archive/refs/heads/master.zip', self::UPDATE_ZIP))
             return false;
 
         $zip = new ZipArchive();
