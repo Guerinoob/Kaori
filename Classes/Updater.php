@@ -8,7 +8,7 @@ class Updater {
 
     public const UPDATE_FOLDER = DOCUMENT_ROOT.'/update';
 
-    public const UPDATE_ZIP = '/master.zip';
+    public const UPDATE_ZIP = self::UPDATE_FOLDER.'/master.zip';
 
     public static function download($url, $destination)
     {
@@ -23,7 +23,7 @@ class Updater {
 
         if($response->getStatusCode() == 200 || $response->getStatusCode() == 302) {
             if(file_exists(self::UPDATE_FOLDER) || mkdir(self::UPDATE_FOLDER)) {
-                return file_put_contents(self::UPDATE_FOLDER.self::UPDATE_ZIP, $response->getContent()) !== false;
+                return file_put_contents(self::UPDATE_ZIP, $response->getContent()) !== false;
             }
         }
 
