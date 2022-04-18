@@ -10,20 +10,25 @@ class Updater {
 
     public const UPDATE_ZIP = self::UPDATE_FOLDER.'/master.zip';
 
-    public static function download($url, $destination)
+    public static function download($url, $destination, $credentials = false)
     {
         $http = new Http();
 
-        $credentials = base64_encode('Guerinoob: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');
+        $headers = '';
+
+        if($credentials) {
+            $credentials = base64_encode($credentials);
+            $headers = 'Authorization: Basic '.$credentials;
+        }
 
         $response = $http->request($url, [
             'method' => 'GET',
-            'headers' => 'Authorization: Basic '.$credentials
+            'headers' => $headers
         ]);
 
         if($response->getStatusCode() == 200 || $response->getStatusCode() == 302) {
             if(file_exists(self::UPDATE_FOLDER) || mkdir(self::UPDATE_FOLDER)) {
-                return file_put_contents(self::UPDATE_ZIP, $response->getContent()) !== false;
+                return file_put_contents($destination, $response->getContent()) !== false;
             }
         }
 
@@ -32,7 +37,7 @@ class Updater {
 
     public static function update($backup = false)
     {
-        if(!self::download('https://github.com/Guerinoob/Kaori/archive/refs/heads/master.zip', self::UPDATE_ZIP))
+        if(!self::download('https://github.com/Guerinoob/Kaori/archive/refs/heads/master.zip', self::UPDATE_ZIP, 'Guerinoob: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'))
             return false;
 
         $zip = new ZipArchive();
