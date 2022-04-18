@@ -38,7 +38,7 @@ class Installer {
         fwrite($f,  str_replace("    ", "", trim($content)));
         fclose($f);
 
-        //unlink(DOCUMENT_ROOT.'/Controllers/InstallerController.php');
+        unlink(DOCUMENT_ROOT.'/Controllers/InstallerController.php');
 
     }
 }
