@@ -58,6 +58,9 @@ class Updater {
 
         $path = self::UPDATE_FOLDER.'/Kaori-master';
 
+        if(file_exists(DOCUMENT_ROOT.'/custom_defines.php')) //Delete the Installer Controller if Kaori is already installed
+            unlink($path.'/Controllers/InstallerController.php');
+
         self::rcopy($path, DOCUMENT_ROOT);
 
         //TODO : deleted files to delete
