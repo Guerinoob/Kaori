@@ -5,6 +5,8 @@
 
 namespace App;
 
+use PDO;
+
 /**
  * This class handles the database connection and can be used to perform queries
  */
@@ -17,11 +19,11 @@ class Database {
     private static $database;
 
     /**
-     * The mysqli instance
+     * The pdo instance
      *
-     * @var \mysqli
+     * @var \PDO
      */
-    public $mysqli_instance;
+    public $pdo;
     
     /**
      * The database user
@@ -68,12 +70,11 @@ class Database {
         $this->db_host = $db_host;
         $this->db_name = $db_name;
 
-        $this->mysqli_instance = mysqli_connect($db_host, $db_user, $db_password, $db_name);
-        mysqli_query($this->mysqli_instance, "SET NAMES utf8");
+        $this->pdo = new PDO('mysql:dbname='.$db_name.';host='.$db_host, $db_user, $db_password, [PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES "UTF8"']);
     }
 
     /**
-     * Returns the mysqli instance
+     * Returns the Database instance
      *
      * @return Database The database instance
      */
@@ -87,13 +88,13 @@ class Database {
     }
     
     /**
-     * Returns the mysqli instance
+     * Returns the pdo instance
      *
-     * @return mysqli The mysqli instance
+     * @return PDO The pdo instance
      */
-    public function getMysqliInstance(): \mysqli
+    public function getPDOInstance(): \PDO
     {
-        return $this->mysqli_instance;
+        return $this->pdo;
     }
     
     /**
@@ -103,7 +104,7 @@ class Database {
      */
     public function getLastInsertId(): int
     {
-        return mysqli_insert_id($this->mysqli_instance);
+        return $this->pdo->lastInsertId();
     }
     
     /**
@@ -114,29 +115,29 @@ class Database {
      */
     public function select($query)
     {
-        if(!$this->mysqli_instance)
+        if(!$this->pdo)
             return false;
 
         if(!preg_match('/^\s*select\s/i', $query))
             return false;
 
-        $statement = mysqli_query($this->mysqli_instance, $query);
+        $statement = $this->pdo->query($query);
 
         if(!$statement)
             return false;
 
-        return $statement->fetch_all(MYSQLI_ASSOC);
+        return $statement->fetchAll(PDO::FETCH_ASSOC);
     }
     
     /**
      * Prepares a request, making it safe towards injections
      *
      * @param  string $query The query to prepare
-     * @return false|mysqli_stmt Returns false if an error occured, else the statement object
+     * @return false|PDOStatement Returns false if an error occured, else the statement object
      */
     public function prepare($query)
     {
-        $prepared_stmt = mysqli_prepare($this->mysqli_instance, $query);
+        $prepared_stmt = $this->pdo->prepare($query);
 
         if(!$prepared_stmt) return false;
 
@@ -147,46 +148,16 @@ class Database {
      * Executes a prepared query through its statement
      *
      * @param  array $args The parameters of the prepared query
-     * @param  mysqli_stmt $statement The statement object of the prepared query
+     * @param  PDOStatement $statement The statement object of the prepared query
      * @return bool|array Returns false if an error occured, true if the query was performed without returning a result (UPDATE, INSERT, CREATE TABLE...), or an array of results if it was a SELECT
      */
     public function execute_prepared_query($args, $statement)
     {
-        $types = "";
-        $array = array();
-
-        foreach ($args as $value){
-            switch(gettype($value)){
-                case 'integer':
-                    $types .= 'i';
-                    break;
-
-                case 'string':
-                    $types .= 's';
-                    break;
-
-                case 'double':
-                    $types .= 'd';
-                    break;
-
-                default:
-                    $types .= 's';
-                    break;
-            }
-
-            $array[] = $value;
-        }
-
-        if(count($array) > 0){
-            if(!$statement->bind_param($types, ...$array)) return false;
-        }
-
-
-        if(!$statement->execute()) return false;
+        if(!$statement->execute($args)) return false;
 
         //Return results if it has some (for select queries)
-        if(($results = $statement->get_result())){
-            return $results->fetch_all(MYSQLI_ASSOC);
+        if(preg_match('/^\s*select\s/i', $statement->queryString)) {
+            return $statement->fetchAll(PDO::FETCH_ASSOC);
         }
 
         return true;
