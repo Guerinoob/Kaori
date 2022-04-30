@@ -50,7 +50,7 @@ class Route {
      * @param  string $url The URL to test
      * @return bool Returns true if it matches, false is it doesn't
      */
-    public function match($url): bool
+    public function matchUrl($url): bool
     {
         $url = trim($url, '/');
         $path = preg_replace('#:([\w]+)#', '([^/]+)', $this->path);
