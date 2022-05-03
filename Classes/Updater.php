@@ -37,7 +37,7 @@ class Updater {
 
     public static function update($backup = false)
     {
-        if(!self::download('https://github.com/Guerinoob/Kaori/archive/refs/heads/master.zip', self::UPDATE_ZIP, 'Guerinoob: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'))
+        if(!self::download('https://github.com/Guerinoob/Kaori/archive/refs/heads/master.zip', self::UPDATE_ZIP))
             return false;
 
         $zip = new ZipArchive();
@@ -48,8 +48,7 @@ class Updater {
 
         if($backup) {
             $backup = new ZipArchive();
-            $path = DOCUMENT_ROOT.'/backup/'.SITENAME.'-'.date('Y-m-d_H-i-s').'.zip';
-            touch($path);
+            $path = DOCUMENT_ROOT.'/Backup/'.SITENAME.'-'.date('Y-m-d_H-i-s').'.zip';
             $backup->open($path, ZipArchive::CREATE);
 
             self::backup($backup, DOCUMENT_ROOT, '');
@@ -105,7 +104,7 @@ class Updater {
                         $zip->addEmptyDir($current.$file);
                         self::backup($zip, $path.'/'.$file, $current.$file.'/');
                     }
-                    else {
+                    else if((!str_starts_with($path.'/'.$file, DOCUMENT_ROOT.'/Backup/') || $file == '.gitignore'))  {
                         $zip->addFile($path.'/'.$file, $current.$file);
                     }
                 }
