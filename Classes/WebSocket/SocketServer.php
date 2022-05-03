@@ -127,13 +127,7 @@ class SocketServer {
         if($is_open) {
         
             while(true) {
-                $read = $this->sockets;
-                $write = null;
-                $except = null;
-
-                @socket_select($read, $write, $except, 1);
-
-                foreach($read as $socket) {
+                foreach($this->sockets as $socket) {
                     if($socket['socket'] == $this->master) {
                         $this->accept();
                         continue;
