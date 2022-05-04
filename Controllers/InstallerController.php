@@ -7,9 +7,9 @@ use App\Installer;
 
 class InstallerController extends BaseController {
     /**
-     * @Route(path="/:path", methods=["GET"])
+     * @Route(path="/install", methods=["GET"])
      */
-    private function install($path) {
+    private function install() {
         Installer::install();
     }
 }
