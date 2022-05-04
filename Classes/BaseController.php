@@ -135,7 +135,9 @@ class BaseController {
      */
     public function call($callback, $arguments)
     {
-        $this->assign('title', SITENAME);
+        if(defined('SITENAME'))
+            $this->assign('title', SITENAME);
+            
         $this->assign('Session', Session::class);
         $this->assign('Tools', Tools::class);
 

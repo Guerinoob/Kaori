@@ -24,7 +24,6 @@ class Installer {
             define('SITENAME', 'Kaori');
 
             define('ROOT_URL', '".$root_url."');
-            define('API_PATH', '/api');
 
             define('SOCKET_PORT', 1000);
 

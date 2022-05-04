@@ -31,7 +31,7 @@ class Renderer {
      */
     public function __construct()
     {
-        if(file_exists(ROOT_THEME_URL.'/assets/js/main.js'))
+        if(defined('ROOT_THEME_URL') && file_exists(ROOT_THEME_URL.'/assets/js/main.js'))
             $this->addJS(ROOT_THEME_URL.'/assets/js/main.js');
     }
     
