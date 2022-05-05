@@ -1,20 +1,31 @@
 <?php
+/**
+ * Http class
+ */
 
 namespace App;
 
+/**
+ * This class allows to make easily perform HTTP requests
+ * The request is built with the request method, which then returns a Response object containing the HTTP response
+ * 
+ * @see Request
+ * @see Response
+ */
 class Http { 
         
     /**
      * Sends an HTTP request to the given URI
      *
-     * @param  mixed $url The request URL
-     * @param  mixed $params An array of request arguments
+     * @param  string $url The request URL
+     * @param  array $params An array of request arguments
      *               - method
      *               - timeout
      *               - headers 
      *               - body
      *               - ssl
-     * @return Response The request's response
+     * 
+     * @return Response|null The request's response or null if the request is invalid
      */
     public function request($url, $params = []): ?Response
     {
@@ -35,6 +46,14 @@ class Http {
         return $request->run();
     }
 
+    /**
+     * Parses a string or an array of headers into a key/value array
+     * If it is a string, each header must be separated by a "\n"
+     * 
+     * @param  mixed An array or a string containing the headers
+     * 
+     * @return array A key/value array of headers
+     */
     public static function parseHeaders($headers)
     {
         $return = [];

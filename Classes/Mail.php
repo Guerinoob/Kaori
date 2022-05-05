@@ -5,7 +5,20 @@
 
 namespace App;
 
+/**
+ * This class allows to send mails
+ */
 class Mail {
+        
+    /**
+     * Sends a mail
+     *
+     * @param  string $to The email address that will receive the mail
+     * @param  string $subject The mail subject
+     * @param  string $message The message to send
+     * @param  string|array $headers The mail headers
+     * @return bool Returns true if the mail was sent, false otherwise
+     */
     public static function send($to, $subject, $message, $headers = ''): bool 
     {
         

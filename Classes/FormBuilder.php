@@ -336,7 +336,7 @@ class FormBuilder {
 
             $custom = $this->customFields($field, $id, $class, $extra);
 
-            if(!$custom) {
+            if($custom == '') {
                 if($html == '') {
                     $html .= '<label for="'.$field['id'].'">'.$field['label'].'</label>';
                     $html .= '<input type="'.$field['type'].'" '.$class.' '.$id.' name="'.$field['name'].'" value="'.$field['value'].'" '.$extra.'>';
@@ -376,6 +376,8 @@ class FormBuilder {
      * @param string $id The ID of the field in HTML if there is one (id="field_id")
      * @param string $class The classes of the field in HTML if there is one (class="field_class")
      * @param string $extra The extra string of the field in HTML, containing custom attributes (attribute="value" attribute2="value2" etc)
+     * 
+     * @return string|null Returns a HTML string of the field
      */
     protected function customFields($field, $id, $class, $extra) {
         return false;

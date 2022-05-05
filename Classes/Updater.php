@@ -1,16 +1,36 @@
 <?php
+/**
+ * Updater class
+ */
 
 namespace App;
 
 use ZipArchive;
 
+/**
+ * This class is used to update the framework from the github repository (https://github.com/Guerinoob/Kaori)
+ */
 class Updater {
 
+    /**
+     * The path to the temporary folder that will contain the updated version
+     */
     public const UPDATE_FOLDER = DOCUMENT_ROOT.'/update';
 
+    /**
+     * The name of the downloaded zip
+     */
     public const UPDATE_ZIP = self::UPDATE_FOLDER.'/master.zip';
-
-    public static function download($url, $destination, $credentials = false)
+    
+    /**
+     * Performs a HTTP request and puts the content into the destination file
+     *
+     * @param  mixed $url The url of the resource to download
+     * @param  mixed $destination The file destination
+     * @param  string|false $credentials A string in the form of "username:password" to add a Authorization: Basic header to the request, or false if no authentication is needed
+     * @return bool Returns true if the resource has been download, false otherwise
+     */
+    protected static function download($url, $destination, $credentials = false)
     {
         $http = new Http();
 
@@ -34,7 +54,13 @@ class Updater {
 
         return false;
     }
-
+    
+    /**
+     * Performs the update
+     *
+     * @param  bool $backup Whether to backup the project in the /Backup folder or not
+     * @return bool Returns true if Kaori has been updated, false otherwise
+     */
     public static function update($backup = false)
     {
         if(!self::download('https://github.com/Guerinoob/Kaori/archive/refs/heads/master.zip', self::UPDATE_ZIP))
@@ -66,9 +92,11 @@ class Updater {
         
         $zip->close();
         self::removeFolder(self::UPDATE_FOLDER);
+
+        return true;
     }
 
-    public static function removeFolder($path)
+    protected static function removeFolder($path)
     {
         if(!is_dir($path))
             return false;
@@ -92,7 +120,7 @@ class Updater {
         rmdir($path);
     }
 
-    public static function backup($zip, $path, $current)
+    protected static function backup($zip, $path, $current)
     {
         if(!is_dir($path))
             return false;
@@ -115,7 +143,7 @@ class Updater {
         
     }
 
-    public static function rcopy($source, $destination)
+    protected static function rcopy($source, $destination)
     {
         if(($dir = opendir($source))) {
             while(($file = readdir($dir))) {

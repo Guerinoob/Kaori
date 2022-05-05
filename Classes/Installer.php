@@ -1,4 +1,7 @@
 <?php
+/**
+ * Installer class
+ */
 
 namespace App;
 

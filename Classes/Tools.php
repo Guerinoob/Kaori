@@ -37,12 +37,24 @@ class Tools {
 
         return $result;
     }
-
+    
+    /**
+     * Returns a JSON string indicating that the response is successful with the given data
+     *
+     * @param  mixed $data The data to return
+     * @return string|false A JSON string or false if $data can not be parsed
+     */
     public static function jsonSuccess($data): string
     {
         return json_encode(['success' => true, 'data' => $data]);
     }
 
+    /**
+     * Returns a JSON string indicating that the response is not successful with the given data
+     *
+     * @param  mixed $data The data to return
+     * @return string|false A JSON string or false if $data can not be parsed
+     */
     public static function jsonError($data)
     {
         return json_encode(['success' => false, 'data' => $data]);

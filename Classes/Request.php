@@ -1,46 +1,108 @@
 <?php
+/**
+ * Request class
+ */
 
 namespace App;
 
-class Request {
+/**
+ * This class represents a HTTP request. It contains different information such as the request url, body, headers etc, and returns a Response object when run
+ * 
+ * @see Response
+ */
+class Request {    
+    /**
+     * The request url
+     *
+     * @var string
+     */
     private $url;
-
+    
+    /**
+     * The request HTTP method
+     *
+     * @var mixed
+     */
     private $method;
-
+    
+    /**
+     * The request headers
+     *
+     * @var mixed
+     */
     private $headers;
-
+    
+    /**
+     * The request data
+     *
+     * @var mixed
+     */
     private $body;
-
+    
+    /**
+     * The request timeout
+     *
+     * @var mixed
+     */
     private $timeout;
 
     public function __construct()
     {
         $this->headers = [];
     }
-
-    public function setUrl($url)
+    
+    /**
+     * Sets the request url
+     *
+     * @param  string $url The request url
+     * @return self The request instance
+     */
+    public function setUrl($url): Request
     {
         $this->url = $url;
         return $this;
     }
-
-    public function getUrl($url)
+    
+    /**
+     * Returns the request url
+     *
+     * @return string The request url
+     */
+    public function getUrl(): string
     {
         return $this->url;
     }
 
-    public function setMethod($method)
+    /**
+     * Sets the request method
+     *
+     * @param  string $method The request method
+     * @return self The request instance
+     */
+    public function setMethod($method): Request
     {
         $this->method = $method;
         return $this;
     }
 
-    public function getMethod()
+    /**
+     * Returns the request method
+     *
+     * @return string The request method
+     */
+    public function getMethod(): string
     {
         return $this->method;
     }
-
-    public function addHeaders($headers) {
+    
+    /**
+     * Adds a single or multiple headers to the request
+     *
+     * @param  string|array $headers An array of headers or a single header
+     * @return self The request instance
+     */
+    public function addHeaders($headers): Request
+    {
         $headers = Http::parseHeaders($headers);
 
         foreach($headers as $key => $value) {
@@ -49,35 +111,69 @@ class Request {
             else
                 $this->headers[$key] = array_merge([$this->headers[$key]], [$value]);
         }
-    }
 
-    public function getHeaders() 
+        return $this;
+    }
+    
+    /**
+     * Returns the request headers
+     *
+     * @return array A key/value array of HTTP headers
+     */
+    public function getHeaders() : array
     {
         return $this->headers;
     }
 
-    public function setBody($body)
+    /**
+     * Sets the request body
+     *
+     * @param  array $body A key/value array of data to pass to the request
+     * @return self The request instance
+     */
+    public function setBody($body): Request
     {
         $this->body = $body;
         return $this;
     }
 
-    public function getBody()
+    /**
+     * Returns the request body
+     *
+     * @return array The request body
+     */
+    public function getBody(): array
     {
         return $this->body;
     }
 
-    public function setTimeout($timeout)
+    /**
+     * Sets the request timeout in seconds
+     *
+     * @param  int $timeout The request timeout
+     * @return self The request instance
+     */
+    public function setTimeout($timeout): Request
     {
         $this->timeout = $timeout;
         return $this;
     }
 
-    public function getTimeout()
+    /**
+     * Returns the request timeout
+     *
+     * @return int The request timeout
+     */
+    public function getTimeout(): int
     {
         return $this->timeout;
     }
-
+    
+    /**
+     * Runs the HTTP request
+     *
+     * @return Response The request's response
+     */
     public function run(): Response
     {
         $headers = [];
@@ -116,8 +212,14 @@ class Request {
 
         return $response;
     }
-
-    private function getStatus($status_line)
+    
+    /**
+     * Returns the HTTP status contained in the first response header line
+     *
+     * @param  mixed $status_line THe first response header line
+     * @return int The HTTP status code
+     */
+    private function getStatus($status_line): int
     {
         preg_match('{HTTP\/\S*\s(\d{3})}', $status_line, $match);
         return $match[1];
