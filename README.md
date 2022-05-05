@@ -2,11 +2,11 @@
 
 Kaori is a light PHP framework. It eases many aspects of web application development by including :
 
--- Easy to use routing system based on controllers
--- Database ORM system based on entities
--- A Session wrapper that also provides a quick authentification and logout system
--- A Form Builder that allows to build and render forms with easy customization
--- HTTP classes that wrap requests and response, allowing easy calls to API
+* Easy to use routing system based on controllers
+* Database ORM system based on entities
+* A Session wrapper that also provides a quick authentification and logout system
+* A Form Builder that allows to build and render forms with easy customization
+* HTTP classes that wrap requests and response, allowing easy calls to API
 
 But also a WebSocket server, a Mail wrapper, a Cron tasks system and even more !
 
