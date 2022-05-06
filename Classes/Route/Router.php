@@ -89,8 +89,9 @@ class Router {
         }
         
         if(!$found) {
-            // TODO : 404 redirection
-            echo 'No route';
+            header("HTTP/1.1 404 Not Found");
+            if(file_exists(TEMPLATES_PATH.'/404.php'))
+                include TEMPLATES_PATH.'/404.php';
         }
     }
 }
