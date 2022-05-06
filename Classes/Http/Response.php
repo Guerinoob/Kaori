@@ -3,7 +3,7 @@
  * Response class
  */
 
-namespace App;
+namespace App\Http;
 
 /**
  * This class represents a response to a HTTP request. It contains the HTTP status code, the response headers and the response content

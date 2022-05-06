@@ -3,9 +3,9 @@
  * Session class
  */
 
-namespace App;
+namespace App\Session;
 
-use App\UserInterface;
+use App\Session\UserInterface;
 
 /**
  * This class is a wrapper for the superglobal $_SESSION variable. It can be used to store data in the session. 

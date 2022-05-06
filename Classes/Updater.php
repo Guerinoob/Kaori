@@ -5,6 +5,7 @@
 
 namespace App;
 
+use App\Http\Http;
 use ZipArchive;
 
 /**

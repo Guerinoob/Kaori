@@ -3,7 +3,7 @@
  * Http class
  */
 
-namespace App;
+namespace App\Http;
 
 /**
  * This class allows to make easily perform HTTP requests

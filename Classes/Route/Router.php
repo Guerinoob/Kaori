@@ -3,7 +3,7 @@
  * Router class
  */
 
-namespace App;
+namespace App\Route;
 
 /**
  * This class stores every route and can run the correct one

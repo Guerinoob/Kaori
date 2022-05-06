@@ -1,6 +1,6 @@
 <?php
 
-use App\Router;
+use App\Route\Router;
 
 ini_set('display_errors','on');
 

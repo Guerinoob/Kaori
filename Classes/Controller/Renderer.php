@@ -3,7 +3,7 @@
  * Renderer class
  */
 
-namespace App;
+namespace App\Controller;
 
 /**
  * This class is used in controllers to add resources (JS, CSS), variables and render a template including these data.

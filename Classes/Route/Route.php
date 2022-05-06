@@ -3,7 +3,7 @@
  * Route class
  */
 
-namespace App;
+namespace App\Route;
 
 /**
  * This class represents one route and binds the route to its callback method

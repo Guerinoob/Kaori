@@ -3,7 +3,7 @@
  * UserInterface interface
  */
 
-namespace App;
+namespace App\Session;
 
 /**
  * This interface serves as an identifier of a class that represents a user in the application.

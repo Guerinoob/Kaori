@@ -3,9 +3,12 @@
  * BaseController class
  */
 
-namespace App;
+namespace App\Controller;
 
 use App\Annotations\AnnotationParser;
+use App\Route\Router;
+use App\Session\Session;
+use App\Tools;
 
 /**
  * This class serves as the parent of all controllers classes

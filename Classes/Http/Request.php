@@ -3,7 +3,7 @@
  * Request class
  */
 
-namespace App;
+namespace App\Http;
 
 /**
  * This class represents a HTTP request. It contains different information such as the request url, body, headers etc, and returns a Response object when run
