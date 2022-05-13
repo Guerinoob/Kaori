@@ -71,7 +71,7 @@ class SocketServer {
      * @param  int $bufferSize The maximum number of bytes that can be read for a message
      * @return void
      */
-    public function __construct($url = '0.0.0.0', $port = SOCKET_PORT, $bufferSize = -1)
+    public function __construct($url = '0.0.0.0', $port = SOCKET_PORT, $bufferSize = 2048)
     {
         $this->clients = [];
         $this->sockets = [];
@@ -99,12 +99,17 @@ class SocketServer {
      */
     public function open(): bool
     {      
-        $socket = stream_socket_server('tcp://'.$this->url.':'.$this->port, $errno, $errstr, STREAM_SERVER_BIND | STREAM_SERVER_LISTEN);
+        $socket = socket_create(AF_INET, SOCK_STREAM, getprotobyname('tcp'));
 
         if(!$socket)
             return false;
 
-        stream_set_blocking($socket, false);
+        socket_set_option($socket, SOL_SOCKET, SO_REUSEADDR, 1);
+
+        if(!socket_bind($socket, $this->url, $this->port) || !socket_listen($socket))
+            return false;
+
+        socket_set_nonblock($socket);
         
         $this->master = $socket;
         $this->sockets['master'] = ['socket' => $socket, 'id' => 'master'];
@@ -163,12 +168,12 @@ class SocketServer {
      */
     public function accept()
     {
-        $socket = @stream_socket_accept($this->master, 0);
+        $socket = @socket_accept($this->master);
 
         if(!$socket)
             return false;
 
-        stream_set_blocking($socket, false);
+        socket_set_nonblock($socket);
 
         $id = bin2hex(random_bytes(12));
 
@@ -194,9 +199,16 @@ class SocketServer {
 
         $s = $this->clients[$id]['socket'];
 
-        $message = stream_get_contents($s, $this->maxBufferSize);
+        $message = '';
+        $buffer = '';
 
-        if($message && $this->clients[$id]['handshake'])
+        while(@socket_recv($s, $buffer, $this->maxBufferSize, 0))
+            $message .= $buffer;
+
+        if($message == '')
+            return false;
+
+        if($this->clients[$id]['handshake'])
             $message = $this->unseal($message);
 
         return $message;
@@ -218,7 +230,7 @@ class SocketServer {
         if($this->clients[$id]['handshake'])
             $message = $this->seal($message);
 
-        return fputs($this->clients[$id]['socket'], $message);
+        return @socket_send($this->clients[$id]['socket'], $message, strlen($message), 0);
     }
     
     /**
@@ -285,7 +297,7 @@ class SocketServer {
 		"WebSocket-Location: ws://$this->url:$this->port\r\n".
 		"Sec-WebSocket-Accept:$acceptkey\r\n\r\n";
       
-        if(fwrite($this->clients[$id]['socket'], $buffer, strlen($buffer))) {
+        if(socket_send($this->clients[$id]['socket'], $buffer, strlen($buffer), 0)) {
             $this->clients[$id]['handshake'] = true;
             return true;
         }
