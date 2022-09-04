@@ -94,7 +94,7 @@ class Response {
      *
      * @return mixed The response content
      */
-    public function getContent(): mixed
+    public function getContent()
     {
         return $this->content;
     }

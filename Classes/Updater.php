@@ -133,7 +133,7 @@ class Updater {
                         $zip->addEmptyDir($current.$file);
                         self::backup($zip, $path.'/'.$file, $current.$file.'/');
                     }
-                    else if((!str_starts_with($path.'/'.$file, DOCUMENT_ROOT.'/Backup/') || $file == '.gitignore'))  {
+                    else if((strpos($path.'/'.$file, DOCUMENT_ROOT.'/Backup/') === -1 || $file == '.gitignore'))  {
                         $zip->addFile($path.'/'.$file, $current.$file);
                     }
                 }
