@@ -5,7 +5,7 @@ define('CLASSES_DIR', DOCUMENT_ROOT.'/Classes');
 define('OVERRIDE_DIR', DOCUMENT_ROOT.'/Override');
 define('THEME_PATH', DOCUMENT_ROOT.'/Theme');
 
-if(defined('ROOT_URL') && defined('API_PATH')) {
+if(defined('ROOT_URL')) {
     define('ROOT_THEME_URL', ROOT_URL.THEME_PATH);
     define('THEME_URL', ROOT_URL.'/Theme');
 
